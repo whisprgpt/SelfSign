@@ -1,2 +1,67 @@
-# SelfSign
-Sign your WhisprGPT App so it can be used within your macOS
+# WhisprGPT Self-Signing Script (macOS)
+
+This repository contains a helper script to create a **self-signed macOS code-signing certificate**, import it into your login keychain, and sign the **WhisprGPT.app** bundle.  
+
+It is for **developers and non-developers** who need to run WhisprGPT locally on macOS without joining the Apple Developer Program.
+
+
+## ⚠️ Before You Begin
+- This is a **one-time setup per device**.
+- This does **not notarize** the app with Apple. Distribution to other Macs will still show warnings.
+- Temporary files (`.csr`, `.cer`, `.key`, `.p12`) will be generated during the run. They are imported into your keychain and can be deleted afterwards.
+
+
+## ✅ Requirements
+- macOS (tested on Monterey / Ventura / Sonoma)
+- Built-in macOS tools: `security`, `openssl`, `codesign`, `xattr`, `spctl`  
+  (no extra installs required)
+- A user account with permission to run Terminal commands
+
+## ▶️ Steps To Do Before Buying Subscription
+
+### 1. Download and Install WhisprGPT
+- Download the latest **DMG** file from the release page (or from the link you were given).  
+- Open the DMG and drag **WhisprGPT.app** into your **Applications** folder.
+
+### 2. Run the Self-Sign Script
+
+1. **Download the script directly:**
+   - Open this repository in your browser.  
+   - Click on `self_sign.sh`.  
+   - Click the **Download raw file** button (or right-click → *Save As…*).  
+   - Save it into your **Downloads** folder.
+
+2. **Open Terminal** (press ⌘ + Space → type *Terminal* → Enter).
+
+3. **Navigate to Downloads**:
+   ```bash
+   cd ~/Downloads
+   ```
+4. **Make the script executable:**
+   ```bash
+   chmod +x self_sign.sh
+   ```
+5. **Run it with sudo user:**
+   ```bash
+   sudo ./self_sign.sh
+   ```
+
+### 3. Verify Works On Intended Platform
+![Verify Works On Platform](verify.jpeg)
+
+  Enjoy the full WhisprGPT experience 🚀
+
+## ⚠️ Software License & Disclaimer ⚠️
+
+This software is provided **"as is"**, without warranty of any kind, express or implied.  
+The developer shall **not be held responsible** for:
+
+- Any misuse of this application in academic, corporate, or legal settings.  
+- Any damages, data loss, or consequences resulting from malfunction or errors in the software.  
+- Any violations of third-party policies, terms of service, or codes of conduct.
+
+By using this software, you agree to take full responsibility for how you use it.
+
+---
+
+**WhisprGPT – Stay sharp. Stay silent.**
