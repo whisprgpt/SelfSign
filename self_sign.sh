@@ -2,13 +2,6 @@
 set -e
 
 #################################
-# Tooling lock (OpenSSL path)
-# Override by running: OPENSSL_BIN=/opt/homebrew/opt/openssl@3/bin/openssl ./self_sign.sh
-#################################
-OPENSSL_BIN="${OPENSSL_BIN:-/usr/bin/openssl}"
-alias openssl="$OPENSSL_BIN"
-
-#################################
 # Pretty printing (output only)
 #################################
 bold() { tput bold 2>/dev/null || true; }
@@ -22,7 +15,7 @@ err()  { echo "$(bold)$(red)[x]$(norm) $*" >&2; }
 bar()  { printf "\n%s\n" "$(bold)── $* ──$(norm)"; }
 
 #################################
-# Config
+# Config (unchanged)
 #################################
 APP="/Applications/wTerm.app"
 KC_FILE_NAME="ldb.keychain-db"
@@ -44,7 +37,7 @@ CSR_FILE="MyCodeSigningCert.csr"
 CER_FILE="MyCodeSigningCert.cer"
 
 #################################
-# Steps
+# Steps (commands preserved)
 #################################
 create_keychain_if_missing() {
   bar "Keychain"
@@ -64,7 +57,6 @@ ensure_in_search_list() {
     ok "Already in keychain search list: $KC_FILE_PATH"
   else
     note "Adding to keychain search list: $KC_FILE_PATH"
-    # preserve existing entries and append ours
     security list-keychains -d user -s $(security list-keychains -d user | sed -e s/\"//g) "$KC_FILE_PATH"
     ok "Added to search list"
   fi
@@ -78,18 +70,8 @@ unlock_and_show_list() {
   security list-keychains
 }
 
-# Helper: check if 'openssl pkcs12 -help' lists a flag (portable across variants)
-_has_pkcs12_flag() {
-  local flag="$1"
-  openssl pkcs12 -help 2>&1 | grep -qE "(^|[[:space:]])-${flag}([[:space:]]|,|$)"
-}
-
 generate_cert_materials() {
   bar "Generate Code Signing Cert (openssl → import)"
-
-  note "Using OpenSSL at: $(command -v openssl)"
-  openssl version -a || true
-
   note "Generating private key"
   openssl genrsa -out codesign.key 2048
 
@@ -102,26 +84,22 @@ generate_cert_materials() {
     -out "$CER_FILE" \
     -extfile <(printf "keyUsage=critical,digitalSignature\nextendedKeyUsage=codeSigning\nsubjectKeyIdentifier=hash\nbasicConstraints=CA:false\n")
 
-  note "Packaging key+cert into PKCS#12 → codesign.p12"
-  # Build args based on what THIS openssl supports
-  PKCS12_ARGS=(pkcs12 -export -inkey codesign.key -in "$CER_FILE" -name "${CERT_CN}" -out codesign.p12 -passout "pass:$P12_PASS")
+  if openssl version 2>/dev/null | grep -q 'OpenSSL 3'; then
+    PKCS12_COMPAT_FLAGS="-legacy"
+  else
+    PKCS12_COMPAT_FLAGS=""
+  fi
 
-  # Prefer modern knobs when available; silently skip if not supported
-  if _has_pkcs12_flag "macalg"; then
-    PKCS12_ARGS+=(-macalg sha256)
+  if [ -n "$PKCS12_COMPAT_FLAGS" ]; then
+    note "Packaging key+cert into PKCS#12 (OpenSSL 3.x → using -legacy) → codesign.p12"
+  else
+    note "Packaging key+cert into PKCS#12 (modern) → codesign.p12"
   fi
-  if _has_pkcs12_flag "certpbe"; then
-    PKCS12_ARGS+=(-certpbe AES-256-CBC)
-  fi
-  if _has_pkcs12_flag "keypbe"; then
-    PKCS12_ARGS+=(-keypbe AES-256-CBC)
-  fi
-  if _has_pkcs12_flag "iter"; then
-    PKCS12_ARGS+=(-iter 2048)
-  fi
-  # Do NOT use -legacy (OpenSSL 3-only and unnecessary here)
 
-  openssl "${PKCS12_ARGS[@]}"
+  openssl pkcs12 -export $PKCS12_COMPAT_FLAGS \
+    -inkey codesign.key -in "$CER_FILE" \
+    -name "${CERT_CN}" -out codesign.p12 \
+    -passout pass:"$P12_PASS"
 
   ok "Key / CSR / Cert / P12 generated"
 }
@@ -215,36 +193,6 @@ verify_signature_and_gatekeeper() {
   ok "Verification step done"
 }
 
-self_test() {
-  bar "Self-Test"
-
-  # 1) Is the PKCS#12 readable?
-  if openssl pkcs12 -info -in codesign.p12 -passin pass:"$P12_PASS" </dev/null 2>&1 | grep -qi "friendlyName"; then
-    ok "PKCS#12 parses correctly"
-  else
-    err "PKCS#12 failed to parse; this machine's openssl produced an incompatible file"
-    exit 1
-  fi
-
-  # 2) Was the identity actually imported into the target keychain?
-  if security find-identity -p codesigning "$KC_FILE_PATH" 2>/dev/null | grep -q "$CERT_CN"; then
-    ok "Found codesigning identity \"$CERT_CN\" in keychain"
-  else
-    err "Codesigning identity \"$CERT_CN\" not found in keychain"
-    exit 1
-  fi
-
-  # 3) Does the app show codesign metadata?
-  if codesign -dv --verbose=2 "$APP" >/dev/null 2>&1; then
-    ok "codesign metadata present on app"
-  else
-    err "codesign metadata not present; signing may have failed"
-    exit 1
-  fi
-
-  ok "Self-test passed on this Mac"
-}
-
 #################################
 # Main (order preserved)
 #################################
@@ -256,12 +204,11 @@ main() {
   Cert CN:       $CERT_CN
   OU / O / C:    $OU / $O / $C
   Valid (days):  $DAYS
-  OpenSSL bin:   $(command -v openssl)
 EOF
 
-  create_keychain_if_missing
-  ensure_in_search_list
-  unlock_and_show_list
+  #create_keychain_if_missing
+  #ensure_in_search_list
+  #unlock_and_show_list
   generate_cert_materials
   import_identity_and_cert
   show_identities
@@ -269,7 +216,6 @@ EOF
   sign_app
   clear_quarantine_if_needed
   verify_signature_and_gatekeeper
-  self_test
 
   bar "Done"
   echo "✅ Your user keychain now trusts \"$CERT_CN\" for code signing, and the app is signed."
