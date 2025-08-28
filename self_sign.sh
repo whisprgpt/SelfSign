@@ -206,9 +206,9 @@ main() {
   Valid (days):  $DAYS
 EOF
 
-  #create_keychain_if_missing
-  #ensure_in_search_list
-  #unlock_and_show_list
+  create_keychain_if_missing
+  ensure_in_search_list
+  unlock_and_show_list
   generate_cert_materials
   import_identity_and_cert
   show_identities
