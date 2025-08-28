@@ -84,22 +84,18 @@ generate_cert_materials() {
     -out "$CER_FILE" \
     -extfile <(printf "keyUsage=critical,digitalSignature\nextendedKeyUsage=codeSigning\nsubjectKeyIdentifier=hash\nbasicConstraints=CA:false\n")
 
-  # Feature-detect support for -legacy (present in OpenSSL 3.x, absent in LibreSSL/older OpenSSL)
-  if openssl pkcs12 -help 2>&1 | grep -q -- ' -legacy'; then
-    note "Packaging key+cert into PKCS#12 (OpenSSL 3.x with -legacy) → codesign.p12"
-    openssl pkcs12 -export -legacy \
-      -inkey codesign.key -in "$CER_FILE" \
-      -name "${CERT_CN}" -out codesign.p12 \
-      -passout pass:"$P12_PASS"
-  else
-    note "Packaging key+cert into PKCS#12 (no -legacy available) → codesign.p12"
-    # Use broadly compatible settings for macOS Keychain import
-    openssl pkcs12 -export \
-      -inkey codesign.key -in "$CER_FILE" \
-      -name "${CERT_CN}" -out codesign.p12 \
-      -passout pass:"$P12_PASS" \
-      -macalg sha256 -iter 2048
-  fi
+  # Create a PKCS#12 without '-legacy', using modern, widely compatible settings
+  note "Packaging key+cert into PKCS#12 → codesign.p12"
+  openssl pkcs12 -export \
+    -inkey codesign.key \
+    -in "$CER_FILE" \
+    -name "${CERT_CN}" \
+    -out codesign.p12 \
+    -passout pass:"$P12_PASS" \
+    -certpbe AES-256-CBC \
+    -keypbe AES-256-CBC \
+    -macalg sha256 \
+    -iter 2048
 
   ok "Key / CSR / Cert / P12 generated"
 }
