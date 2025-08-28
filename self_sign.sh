@@ -85,7 +85,7 @@ generate_cert_materials() {
     -extfile <(printf "keyUsage=critical,digitalSignature\nextendedKeyUsage=codeSigning\nsubjectKeyIdentifier=hash\nbasicConstraints=CA:false\n")
 
   note "Packaging key+cert into PKCS#12 (legacy) → codesign.p12"
-  openssl pkcs12 -export -legacy -inkey codesign.key -in "$CER_FILE" \
+  openssl pkcs12 -export -inkey codesign.key -in "$CER_FILE" \
     -name "${CERT_CN}" -out codesign.p12 -passout pass:"$P12_PASS"
 
   ok "Key / CSR / Cert / P12 generated"
