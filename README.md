@@ -12,7 +12,7 @@ It is for **developers and non-developers** who need to run WhisprGPT locally on
 
 
 ## ✅ Requirements
-- macOS (tested on Monterey / Ventura / Sonoma)
+- macOS (tested on Sequoia)
 - Built-in macOS tools: `security`, `openssl`, `codesign`, `xattr`, `spctl`  
   (no extra installs required)
 - A user account with permission to run Terminal commands
