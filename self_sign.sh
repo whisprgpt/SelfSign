@@ -218,8 +218,8 @@ EOF
   verify_signature_and_gatekeeper
 
   bar "Done"
-  echo "✅ Your user keychain now trusts \"$CERT_CN\" for code signing, and the app is signed."
-  echo "   On THIS Mac, first launch may still require right-click → Open once (self-signed, not notarized)."
+  echo "✅ Your user keychain now trusts \"$CERT_CN\" for code signing, and the app is signed.\n"
+  echo "⚠️ On THIS Mac, first launch may still require right-click → Open once (self-signed, not notarized)."
 }
 
 main "$@"
