@@ -25,7 +25,7 @@ It is for **developers and non-developers** who need to run WhisprGPT locally on
 
 ### 2. Run the Self-Sign Script
 
-1. **Download the script directly:**
+1. **Download the [self_sign.sh](./self_sign.sh?raw=1) directly:**
    - Open this repository in your browser.  
    - Click on `self_sign.sh`.  
    - Click the **Download raw file** button (or right-click → *Save As…*).  
