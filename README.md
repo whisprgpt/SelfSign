@@ -46,7 +46,7 @@ It is for **developers and non-developers** who need to run WhisprGPT locally on
    sudo ./self_sign.sh
    ```
 
-### 3. Verify Works On Intended Platform
+### 3. Open and verify that WhisprGPT Works On Intended Platform
 ![Verify Works On Platform](verify.jpeg)
 
   Enjoy the full WhisprGPT experience 🚀
