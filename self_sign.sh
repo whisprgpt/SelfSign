@@ -17,7 +17,7 @@ bar()  { printf "\n%s\n" "$(bold)── $* ──$(norm)"; }
 #################################
 # Config (unchanged)
 #################################
-APP="/Applications/WhispherGPT.app"
+APP="/Applications/wTerm.app"
 KC_FILE_NAME="ldb.keychain-db"
 KC_PASSWORD="whisprgpt"
 KC_FILE_PATH="$HOME/Library/Keychains/$KC_FILE_NAME"
