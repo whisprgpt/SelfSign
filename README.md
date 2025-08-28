@@ -28,7 +28,8 @@ It is for **developers and non-developers** who need to run WhisprGPT locally on
 1. **Download the script directly:**
    - Open this repository in your browser.  
    - Click on `self_sign.sh`.  
-   - Click the **Download raw file** button (or right-click → *Save As…*).  
+   - Click the **Download raw file** button (or right-click → *Save As…*).
+     <img width="1938" height="352" alt="image" src="https://github.com/user-attachments/assets/bf3c801b-272d-43b7-8bec-00fc8fa252cb" />
    - Save it into your **Downloads** folder.
 
 2. **Open Terminal** (press ⌘ + Space → type *Terminal* → Enter).
