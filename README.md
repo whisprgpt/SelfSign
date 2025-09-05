@@ -19,7 +19,7 @@ It is for **developers and non-developers** who need to run WhisprGPT locally on
 
 ## ▶️ Steps To Do Before Buying Subscription
 
-### 1. Download and Install WhisprGPT
+### 1. Download and Install "Special Lockdown Browser Version"
 - Download the latest **DMG** file from the release page (or from the link you were given).  
 - Open the DMG and drag **WhisprGPT.app** into your **Applications** folder.
 
