@@ -218,6 +218,8 @@ EOF
   verify_signature_and_gatekeeper
 
   bar "Done"
+  rm -f codesign.key "$CSR_FILE" "$CER_FILE" codesign.p12
+  ok "Removed generated files"
   echo "✅ Your user keychain now trusts \"$CERT_CN\" for code signing, and the app is signed."
   echo "⚠️ On THIS Mac, first launch may still require right-click → Open once (self-signed, not notarized)."
 }
