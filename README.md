@@ -1,20 +1,12 @@
 # WhisprGPT Self-Signing Script (macOS)
 
-This repository contains a helper script to create a **self-signed macOS code-signing certificate**, import it into your login keychain, and sign the **WhisprGPT.app** bundle.  
-
-It is for **developers and non-developers** who need to run WhisprGPT locally on macOS without joining the Apple Developer Program.
-
-
 ## ⚠️ Before You Begin
 - This is a **one-time setup per device**.
-- This does **not notarize** the app with Apple. Distribution to other Macs will still show warnings.
-- Temporary files (`.csr`, `.cer`, `.key`, `.p12`) will be generated during the run. They are imported into your keychain and can be deleted afterwards.
 
 
 ## ✅ Requirements
 - macOS (tested on Sequoia)
-- Built-in macOS tools: `security`, `openssl`, `codesign`, `xattr`, `spctl`  
-  (no extra installs required)
+- Built-in macOS tools: `security`, `openssl`, `codesign`, `xattr`, `spctl`  (no extra installs required)
 - A user account with permission to run Terminal commands
 
 ## ▶️ Steps To Do Before Buying Subscription
@@ -42,10 +34,13 @@ It is for **developers and non-developers** who need to run WhisprGPT locally on
    ```bash
    chmod +x self_sign.sh
    ```
-5. **Run it with sudo user:**
-   ```bash
-   sudo ./self_sign.sh
-   ```
+    
+5.  **Run the script:**  
+    Copy and paste the command below into Terminal, then press **Enter**:
+    
+    ```bash
+    ./self_sign.sh
+    ```
 
 ### 3. Open and verify that WhisprGPT Works On Intended Platform
 ![Verify Works On Platform](verify.jpeg)
@@ -63,6 +58,6 @@ The developer shall **not be held responsible** for:
 
 By using this software, you agree to take full responsibility for how you use it.
 
----
+
 
 **WhisprGPT – Stay sharp. Stay silent.**
