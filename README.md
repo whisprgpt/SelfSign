@@ -36,7 +36,8 @@
    ```
     
 5.  **Run the script:**  
-    Copy and paste the command below into Terminal, then press **Enter**:
+    Copy and paste the command below into Terminal, then press **Enter**: <br />
+    ⚠️ NOTE: In the [YouTube Installation Video](https://youtu.be/t2cnGZuFLbg?si=cMzt-At5l-LWNan7) I typed my password inside the terminal, YOU WILL NOT NEED TO DO THAT HERE
     
     ```bash
     ./self_sign.sh
