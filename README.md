@@ -1,13 +1,8 @@
 # WhisprGPT Self-Signing Script (macOS)
 
-## ⚠️ Before You Begin
-- This is a **one-time setup per device**.
-
-
 ## ✅ Requirements
 - macOS (tested on Sequoia)
 - Built-in macOS tools: `security`, `openssl`, `codesign`, `xattr`, `spctl`  (no extra installs required)
-- A user account with permission to run Terminal commands
 
 ## ▶️ Steps To Do Before Buying Subscription
 
