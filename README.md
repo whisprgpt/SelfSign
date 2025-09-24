@@ -37,7 +37,20 @@
     ```bash
     ./self_sign.sh
     ```
-
+    
+    ### 🔧 Troubleshooting  
+      If you see an error like this after running:  
+      ```
+      codesign.key: Permission denied
+      error: fopen('codesign.key', 'w')
+      ```
+      OR *macOS* still says the app is damaged, rerun the script with **sudo** and click **Enter**:  
+      ⚠️ NOTE: In this case, you **will need to enter your Mac password**.  
+      ℹ️ When typing your password, **nothing will appear on screen** (no dots or characters) — this is normal macOS security behavior.  
+   
+      ```bash
+      sudo ./self_sign.sh
+      ```
 ### 3. Open and verify that WhisprGPT Works On Intended Platform
 ![Verify Works On Platform](verify.jpeg)
 
